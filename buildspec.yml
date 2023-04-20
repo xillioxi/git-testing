@@ -5,9 +5,14 @@ phases:
     commands:
       - echo Logging in to Amazon ECR...
       - echo $AWS_DEFAULT_REGION
-
+      - aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin public.ecr.aws/b9f0s0s6
   build:
     commands:
       - echo Build started on `date`
-      - echo Building the Docker image...          
-      - docker build -t ver_1 .
+      - echo Building the Docker image...
+      - export DOCKER_BUILDKIT=1          
+      - docker build -t expressapp .
+      - docker tag expressapp:latest public.ecr.aws/b9f0s0s6/expressapp:latest
+      - docker push public.ecr.aws/b9f0s0s6/expressapp:latest
+
+
